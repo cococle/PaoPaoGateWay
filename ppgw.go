@@ -174,7 +174,7 @@ func main() {
 			max_rec = 5000
 		}
 		wsURL := "ws://127.0.0.1:" + wsPort + "/connections?token=" + secret
-		fmt.Printf("\n" + green + "[PaoPaoGW REC]" + reset + "Start NET REC :" + wsPort + " \n")
+		fmt.Printf("\n" + green + "[FrayunWAY REC]" + reset + "Start NET REC :" + wsPort + " \n")
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -188,7 +188,7 @@ func main() {
 			for {
 				conn, _, err := websocket.Dial(ctx, wsURL, nil)
 				if err != nil {
-					fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Failed to dial WebSocket.\n")
+					fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Failed to dial WebSocket.\n")
 					time.Sleep(5 * time.Second)
 					continue
 				}
@@ -201,7 +201,7 @@ func main() {
 					var connectionInfo ConnectionInfo
 					err := wsjson.Read(ctx, conn, &connectionInfo)
 					if err != nil {
-						fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Failed to read WebSocket message.\n")
+						fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Failed to read WebSocket message.\n")
 						break
 					}
 
@@ -275,26 +275,26 @@ func main() {
 			currentFilePath := recPath + "/data.csv"
 			file, err := os.Create(newFilePath)
 			if err != nil {
-				fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Failed to create CSV file.\n")
+				fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Failed to create CSV file.\n")
 				mutex.Unlock()
 				continue
 			}
 			defer file.Close()
 			writer := csv.NewWriter(file)
 			if err := writer.Write([]string{"Domain", "Download", "Upload", "ClientIP"}); err != nil {
-				fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Error writing CSV header.\n")
+				fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Error writing CSV header.\n")
 				continue
 			}
 			for _, info := range domainInfoList {
 				row := []string{info.Domain, formatBytes(info.Download), formatBytes(info.Upload), info.ClientIP}
 				if err := writer.Write(row); err != nil {
-					fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Error writing CSV data.\n")
+					fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Error writing CSV data.\n")
 					continue
 				}
 			}
 			writer.Flush()
 			if err := writer.Error(); err != nil {
-				fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Error flushing CSV data.\n")
+				fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Error flushing CSV data.\n")
 			}
 			file.Close()
 			if _, err := os.Stat(currentFilePath); err == nil {
@@ -302,7 +302,7 @@ func main() {
 			}
 
 			if err := os.Rename(newFilePath, currentFilePath); err != nil {
-				fmt.Printf("\n" + red + "[PaoPaoGW REC]" + reset + "Failed to replace CSV file.\n")
+				fmt.Printf("\n" + red + "[FrayunWAY REC]" + reset + "Failed to replace CSV file.\n")
 				os.Rename(oldFilePath, currentFilePath)
 			}
 			if _, err := os.Stat(oldFilePath); err == nil {
@@ -316,10 +316,10 @@ func main() {
 	if reload {
 		err := reloadYaml(apiURL, secret)
 		if err != nil {
-			fmt.Printf(red+"[PaoPaoGW Reload]"+reset+"ERR：%s\n", err)
+			fmt.Printf(red+"[FrayunWAY Reload]"+reset+"ERR：%s\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("\n" + green + "[PaoPaoGW Reload]" + reset + "Yaml reload OK. \n")
+		fmt.Printf("\n" + green + "[FrayunWAY Reload]" + reset + "Yaml reload OK. \n")
 		os.Exit(0)
 	}
 	//test_http_code
@@ -377,7 +377,7 @@ func main() {
 		}
 		err := deleteConnections(apiURL, secret)
 		if err != nil {
-			fmt.Printf(red+"[PaoPaoGW Close]"+reset+"Unable to close connections %s：%v\n", err)
+			fmt.Printf(red+"[FrayunWAY Close]"+reset+"Unable to close connections %s：%v\n", err)
 			os.Exit(1)
 		}
 		os.Exit(0)
@@ -404,10 +404,10 @@ func main() {
 	if apiURL != "" && secret != "" && spec_node != "" {
 		err := selectNode(apiURL, secret, spec_node)
 		if err != nil {
-			fmt.Printf(red+"[PaoPaoGW SOCKS]"+reset+"Unable to select ppgwsocks ：%v\n", err)
+			fmt.Printf(red+"[FrayunWAY SOCKS]"+reset+"Unable to select ppgwsocks ：%v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("\n" + green + "[PaoPaoGW SOCKS]" + reset + "The ppgwsocks node selected.")
+		fmt.Printf("\n" + green + "[FrayunWAY SOCKS]" + reset + "The ppgwsocks node selected.")
 		// deleteConnections(apiURL, secret)
 		os.Exit(0)
 	}
@@ -419,7 +419,7 @@ func main() {
 
 		nodes, _, err := getNodes(apiURL, secret)
 		if err != nil {
-			fmt.Printf(red+"[PaoPaoGW Fast]"+reset+"Unable to get node list:%v\n", err)
+			fmt.Printf(red+"[FrayunWAY Fast]"+reset+"Unable to get node list:%v\n", err)
 			return
 		}
 
@@ -440,7 +440,7 @@ func main() {
 					if err1 == nil {
 						pingResults = append(pingResults, PingResult{Node: node1.Node, Duration: duration1})
 					} else {
-						fmt.Printf(red+"[PaoPaoGW Fast]"+reset+"Node %s:%v\n", node1.Node, err1)
+						fmt.Printf(red+"[FrayunWAY Fast]"+reset+"Node %s:%v\n", node1.Node, err1)
 						time.Sleep(time.Duration(1+waitdelaynum/1000) * time.Second)
 					}
 					if index+1 < len(nodes) {
@@ -449,7 +449,7 @@ func main() {
 						if err2 == nil {
 							pingResults = append(pingResults, PingResult{Node: node2.Node, Duration: duration2})
 						} else {
-							fmt.Printf(red+"[PaoPaoGW Fast]"+reset+"Node %s：%v\n", node2.Node, err2)
+							fmt.Printf(red+"[FrayunWAY Fast]"+reset+"Node %s：%v\n", node2.Node, err2)
 							time.Sleep(time.Duration(1+waitdelaynum/1000) * time.Second)
 						}
 					}
@@ -468,14 +468,14 @@ func main() {
 			fastestNode := pingResults[0].Node
 			err := selectNode(apiURL, secret, fastestNode)
 			if err != nil {
-				fmt.Printf(red+"[PaoPaoGW Fast]"+reset+"Unable to select node %s：%v\n", fastestNode, err)
+				fmt.Printf(red+"[FrayunWAY Fast]"+reset+"Unable to select node %s：%v\n", fastestNode, err)
 				os.Exit(1)
 			}
-			fmt.Printf("\n"+green+"[PaoPaoGW Fast]"+reset+"The fastest node selected:%s\n", fastestNode)
+			fmt.Printf("\n"+green+"[FrayunWAY Fast]"+reset+"The fastest node selected:%s\n", fastestNode)
 			// deleteConnections(apiURL, secret)
 			os.Exit(0)
 		} else {
-			fmt.Println("\n" + red + "[PaoPaoGW Fast]" + reset + "All nodes failed !")
+			fmt.Println("\n" + red + "[FrayunWAY Fast]" + reset + "All nodes failed !")
 		}
 		os.Exit(1)
 	}
@@ -501,7 +501,7 @@ func main() {
 			fmt.Printf("%v\n", err)
 			os.Exit(1)
 		} else {
-			fmt.Println(green + "[PaoPaoGW Get]" + reset + "Download: OK!")
+			fmt.Println(green + "[FrayunWAY Get]" + reset + "Download: OK!")
 			os.Exit(0)
 		}
 	}
@@ -767,32 +767,32 @@ func (d *Downloader) Download() error {
 	host := req.URL.Hostname()
 	addrs, err := net.LookupHost(host)
 	if err != nil {
-		return fmt.Errorf(red+"[PaoPaoGW Get]"+reset+host+"failed to perform DNS lookup: %v", err)
+		return fmt.Errorf(red+"[FrayunWAY Get]"+reset+host+"failed to perform DNS lookup: %v", err)
 	}
-	fmt.Println(orange+"[PaoPaoGW Get]"+reset+"HOST:"+host+" IP:", strings.Join(addrs, ", "))
+	fmt.Println(orange+"[FrayunWAY Get]"+reset+"HOST:"+host+" IP:", strings.Join(addrs, ", "))
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf(red+"[PaoPaoGW Get]"+reset+"request failed: %v", err)
+		return fmt.Errorf(red+"[FrayunWAY Get]"+reset+"request failed: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 400 {
-		return fmt.Errorf(red+"[PaoPaoGW Get]"+reset+host+" request failed with status code %d", resp.StatusCode)
+		return fmt.Errorf(red+"[FrayunWAY Get]"+reset+host+" request failed with status code %d", resp.StatusCode)
 	}
 
 	finalURL := resp.Request.URL.String()
-	fmt.Println(orange+"[PaoPaoGW Get]"+reset+"URL:", finalURL)
+	fmt.Println(orange+"[FrayunWAY Get]"+reset+"URL:", finalURL)
 
 	file, err := os.Create(d.OutputFile)
 	if err != nil {
-		return fmt.Errorf(red+"[PaoPaoGW Get]"+reset+"failed to create output file: %v", err)
+		return fmt.Errorf(red+"[FrayunWAY Get]"+reset+"failed to create output file: %v", err)
 	}
 	defer file.Close()
 
 	_, err = io.Copy(file, resp.Body)
 	if err != nil {
-		return fmt.Errorf(red+"[PaoPaoGW Get]"+reset+host+" download failed: %v", err)
+		return fmt.Errorf(red+"[FrayunWAY Get]"+reset+host+" download failed: %v", err)
 	}
 
 	return nil
