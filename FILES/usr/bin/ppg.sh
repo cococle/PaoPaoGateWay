@@ -5,14 +5,14 @@ log() {
     log_msg=$1
     log_type=$2
     if [ "$log_type" = "warn" ]; then
-        echo -e "\033[31m[PaoPaoGW $(date +%H%M%S)]\033[0m ""$log_msg" >/dev/tty0
+        echo -e "\033[31m[FrayunWAY $(date +%H%M%S)]\033[0m ""$log_msg" >/dev/tty0
         return 0
     fi
     if [ "$log_type" = "succ" ]; then
-        echo -e "\033[32m[PaoPaoGW $(date +%H%M%S)]\033[0m ""$log_msg" >/dev/tty0
+        echo -e "\033[32m[FrayunWAY $(date +%H%M%S)]\033[0m ""$log_msg" >/dev/tty0
         return 0
     fi
-    echo -e "[PaoPaoGW $(date +%H%M%S)] ""$1" >/dev/tty0
+    echo -e "[FrayunWAY $(date +%H%M%S)] ""$1" >/dev/tty0
 }
 
 net_ready() {
@@ -774,8 +774,8 @@ while true; do
     fi
     try_conf "ppgw.ini" "ini"
     hash=$(gen_hash)
-    log "[OLD PPGW HASH]: ""$last_hash"
-    log "[NEW PPGW HASH]: ""$hash"
+    log "[OLD FrayunWAY HASH]: ""$last_hash"
+    log "[NEW FrayunWAY HASH]: ""$hash"
     if [ "$hash" != "$last_hash" ]; then
         if echo "$hash" | grep -Eqo "[a-z0-9]{32}"; then
             log "The hash has changed, reload gateway." warn
